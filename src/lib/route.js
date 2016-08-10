@@ -123,17 +123,30 @@ Route.fromData = dataToRoute
  */
 function dataToRoute (data) {
   if (data instanceof Route) return data
+
+  /*
+  * acccount can be an object, not only a string
+  * */
+  function convertAccount(account) {
+    if (typeof(account) === 'object') {
+      return account.id;
+    } else {
+      return account;
+    }
+  }
+
   return new Route(data.points, [
     data.source_ledger,
     data.destination_ledger
   ], {
     minMessageWindow: data.min_message_window,
     connector: data.connector,
-    sourceAccount: data.source_account,
-    destinationAccount: data.destination_account,
+    sourceAccount: convertAccount(data.source_account),
+    destinationAccount: convertAccount(data.destination_account),
     additionalInfo: data.additional_info
   })
 }
+
 
 /**
  * @param {Array} listA
